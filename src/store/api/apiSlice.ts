@@ -4,6 +4,7 @@ export type Tjob = {
   jdUid: string;
   jdLink: string;
   jobDetailsFromCompany: string;
+  companyName: string;
   maxJdSalary: number;
   minJdSalary: number;
   salaryCurrencyCode: string;
@@ -11,6 +12,7 @@ export type Tjob = {
   minExp: number | null;
   maxExp: number | null;
   jobRole: string;
+  logoUrl: string | null;
 };
 
 export const apiSlice = createApi({
