@@ -21,6 +21,8 @@ function JobCard({ jobInfo }: { jobInfo: Tjob }) {
     minJdSalary,
     salaryCurrencyCode,
     jobDetailsFromCompany,
+    companyName,
+    logoUrl,
   } = jobInfo;
 
   const currencyCode = salaryCurrencyCode === "USD" ? "$" : "₹";
@@ -55,8 +57,8 @@ function JobCard({ jobInfo }: { jobInfo: Tjob }) {
         alignItems="center"
       >
         <Avatar
-          alt="Company"
-          src="companyLogo"
+          alt="Company logo"
+          src={logoUrl ?? "company logo"}
           variant="square"
           sx={{ height: 50, width: 50 }}
         />
@@ -66,7 +68,7 @@ function JobCard({ jobInfo }: { jobInfo: Tjob }) {
             fontWeight={600}
             color="gray"
           >
-            Company Name
+            {companyName}
           </Typography>
           <Typography textTransform="capitalize">{jobRole}</Typography>
           <Typography
