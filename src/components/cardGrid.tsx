@@ -3,11 +3,14 @@ import { Tjob, useGetJobsMutation } from "../store/api/apiSlice";
 import { Container, Stack } from "@mui/material";
 import JobCard from "./card/jobCard";
 import LoadingCards from "./loadingCards";
+import { useAppSelector } from "../hooks/redux";
 
 function CardGrid() {
   const [offset, setOffset] = useState(0);
-  const [getJobs, { isLoading, status }] = useGetJobsMutation();
+  const [getJobs, { isLoading }] = useGetJobsMutation();
   const [jobs, setJobs] = useState<Tjob[]>([]);
+  const filterState = useAppSelector((state) => state.filters);
+  console.log(filterState);
 
   const observerTarget = useRef<HTMLDivElement>(null);
 
@@ -17,7 +20,6 @@ function CardGrid() {
       try {
         const res = await getJobs({ offset }).unwrap();
         setJobs((prevJobs) => [...prevJobs, ...res.jobs]);
-        console.log("fetching heres 2", status);
       } catch (err) {
         console.error("Error fetching jobs", err);
       }
@@ -46,6 +48,68 @@ function CardGrid() {
     };
   }, [observerTarget]);
 
+  const filterJobs = () => {
+    let filteredJobsNew = jobs ?? [];
+    const {
+      minExperience,
+      companyName,
+      location,
+      remote,
+      // techStack,
+      role,
+      minBasePay,
+    } = filterState;
+    if (minExperience > 0) {
+      filteredJobsNew = filteredJobsNew.filter((job) => {
+        if (job.minExp) return job.minExp > minExperience;
+      });
+    }
+    if (companyName.length > 0) {
+      filteredJobsNew = filteredJobsNew.filter((job) => {
+        if (job.companyName)
+          return job.companyName
+            .toLowerCase()
+            .includes(companyName.toLowerCase());
+      });
+    }
+    if (location.length > 0) {
+      filteredJobsNew = filteredJobsNew.filter((job) => {
+        if (job.location)
+          return job.location.toLowerCase().includes(location.toLowerCase());
+      });
+    }
+    if (remote !== "any") {
+      if (remote === "remote") {
+        filteredJobsNew = filteredJobsNew.filter((job) =>
+          job.location.toLowerCase().includes("remote"),
+        );
+      } else {
+        // on-site
+        filteredJobsNew = filteredJobsNew.filter(
+          (job) => !job.location.toLowerCase().includes("remote"),
+        );
+      }
+    }
+    // if (techStack.length > 0) {
+    //   filteredJobsNew.filter((job) => {
+    //     if (job.minExp) return job.minExp > minExperience;
+    //   });
+    // }
+    if (role.length > 0) {
+      filteredJobsNew = filteredJobsNew.filter((job) =>
+        job.jobRole.toLowerCase().includes(role),
+      );
+    }
+    if (minBasePay > 0) {
+      filteredJobsNew = filteredJobsNew.filter((job) => {
+        if (job.minJdSalary) return job.minJdSalary > minBasePay;
+      });
+    }
+    return filteredJobsNew;
+  };
+  const filteredJobs = filterJobs();
+  console.log(filteredJobs);
+
   // fetchJobs on offset change
   useEffect(() => {
     fetchJobs();
@@ -53,14 +117,14 @@ function CardGrid() {
 
   return (
     <Container maxWidth="xl">
-      {jobs && (
+      {filteredJobs && (
         <Stack
           direction="row"
           flexWrap="wrap"
           gap={4}
           justifyContent="center"
         >
-          {jobs.map((job) => (
+          {filteredJobs.map((job) => (
             <JobCard
               key={job.jdUid}
               jobInfo={job}
