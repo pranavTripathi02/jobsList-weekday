@@ -1,4 +1,4 @@
-// import { Box, Button, Container, Stack } from "@mui/material";
+import { Box, Button, Container } from "@mui/material";
 import { Stack } from "@mui/material";
 import ExpFilter from "./expFilter";
 import RemoteFilter from "./remoteFilter";
@@ -7,58 +7,68 @@ import LocationFilter from "./locationFilter";
 import MinBasePayFilter from "./minBasePayFilter";
 import RolesFilter from "./rolesFilter";
 import TechStackFilter from "./techStackFilter";
-// import { useAppDispatch } from "../../hooks/redux";
-// import { resetAllFilters } from "../../store/reducers/filtersSlice";
+import { useAppDispatch } from "../../hooks/redux";
+import { resetAllFilters } from "../../store/reducers/filtersSlice";
+import { useEffect, useState } from "react";
 
 function Filters() {
-  // const dispatch = useAppDispatch();
-  // const handleReset = () => {
-  //   dispatch(resetAllFilters());
-  // };
+  const dispatch = useAppDispatch();
+  const [isReset, setIsReset] = useState(0);
+  const handleReset = () => {
+    dispatch(resetAllFilters());
+    setIsReset((prev) => prev + 1);
+  };
+  useEffect(() => {
+    setIsReset(0);
+  }, [isReset]);
   return (
     <>
-      <Stack
-        direction="row"
-        gap={4}
-        justifyContent={"center"}
-        flexWrap={"wrap"}
-      >
-        {/* min experience filter */}
-        <ExpFilter />
+      {/* ISSUE:  */}
+      {/* crude reset method */}
+      {isReset === 0 && (
+        <Stack
+          direction="row"
+          gap={4}
+          justifyContent={"center"}
+          flexWrap={"wrap"}
+        >
+          {/* min experience filter */}
+          <ExpFilter />
 
-        {/* company name filter */}
-        <CompanyNameFilter />
+          {/* company name filter */}
+          <CompanyNameFilter />
 
-        {/* roles filter */}
-        <RolesFilter />
+          {/* roles filter */}
+          <RolesFilter />
 
-        {/* location filter */}
-        <LocationFilter />
+          {/* location filter */}
+          <LocationFilter />
 
-        {/* remote filter */}
-        <RemoteFilter />
+          {/* remote filter */}
+          <RemoteFilter />
 
-        {/* tech stack filter */}
-        <TechStackFilter />
+          {/* tech stack filter */}
+          <TechStackFilter />
 
-        {/* min base pay filter */}
-        <MinBasePayFilter />
-      </Stack>
-      {/* <Container> */}
-      {/*   <Box */}
-      {/*     textAlign="right" */}
-      {/*     pt={4} */}
-      {/*     pb={8} */}
-      {/*   > */}
-      {/*     <Button */}
-      {/*       variant="contained" */}
-      {/*       onChange={handleReset} */}
-      {/*       fullWidth={false} */}
-      {/*     > */}
-      {/*       Clear all filters */}
-      {/*     </Button> */}
-      {/*   </Box> */}
-      {/* </Container> */}
+          {/* min base pay filter */}
+          <MinBasePayFilter />
+        </Stack>
+      )}
+      <Container>
+        <Box
+          textAlign="right"
+          pt={4}
+          pb={8}
+        >
+          <Button
+            variant="contained"
+            onClick={handleReset}
+            fullWidth={false}
+          >
+            Clear all filters
+          </Button>
+        </Box>
+      </Container>
     </>
   );
 }
