@@ -31,15 +31,13 @@ const filtersSlice = createSlice({
       action: { payload: { filter: Partial<TinitialState> } },
     ) => {
       const { filter } = action.payload;
-      console.log("hi", filter);
-      return { ...state, filter };
+      return { ...state, ...filter };
     },
     removeFilter: (
       state,
       action: { payload: { filter: keyof TinitialState } },
     ) => {
       const { filter } = action.payload;
-      console.log("ho", filter);
       return { ...state, filter: initialState[filter] };
     },
     resetAllFilters: () => {
