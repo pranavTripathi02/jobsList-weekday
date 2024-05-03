@@ -1,9 +1,19 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  AvatarGroup,
+  Box,
+  Button,
+  Popover,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { Tjob } from "../../store/api/apiSlice";
+import "./jobCard.css";
+import { ElectricBolt } from "@mui/icons-material";
+import { useState } from "react";
 
 function JobCard({ jobInfo }: { jobInfo: Tjob }) {
   const {
-    jdLink,
     minExp,
     jobRole,
     location,
@@ -13,51 +23,175 @@ function JobCard({ jobInfo }: { jobInfo: Tjob }) {
     jobDetailsFromCompany,
   } = jobInfo;
 
+  const currencyCode = salaryCurrencyCode === "USD" ? "$" : "₹";
+
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
   return (
-    <Box
-      maxHeight={500}
-      maxWidth={300}
+    <Stack
+      width={320}
+      height={512}
       borderRadius={5}
       boxShadow={2}
       px="2rem"
       py="2rem"
+      gap={1}
     >
       {/* posted when */}
-      <Stack direction="row">
-        <img
-          src=""
-          alt=""
+      <Stack
+        direction="row"
+        gap={2}
+        alignItems="center"
+      >
+        <Avatar
+          alt="Company"
+          src="companyLogo"
+          variant="square"
+          sx={{ height: 50, width: 50 }}
         />
         <Stack direction="column">
-          <Typography>{jobRole}</Typography>
-          <Typography>{location}</Typography>
+          <Typography
+            fontSize={14}
+            fontWeight={600}
+            color="gray"
+          >
+            Company Name
+          </Typography>
+          <Typography textTransform="capitalize">{jobRole}</Typography>
+          <Typography
+            fontSize={12}
+            textTransform="capitalize"
+          >
+            {location}
+          </Typography>
         </Stack>
       </Stack>
-      <Typography>
-        Estimated Salary: {salaryCurrencyCode}
-        {minJdSalary} - {salaryCurrencyCode}
-        {maxJdSalary} LPA
-      </Typography>
+      {/* hide min/max salary if not provided */}
+      {minJdSalary ? (
+        maxJdSalary ? (
+          <Typography>
+            Estimated Salary: {currencyCode}
+            {minJdSalary} - {currencyCode}
+            {maxJdSalary} LPA
+          </Typography>
+        ) : (
+          <Typography>
+            Estimated Salary: {currencyCode}
+            {minJdSalary}
+          </Typography>
+        )
+      ) : (
+        <Typography>
+          Estimated Salary: {currencyCode}
+          {maxJdSalary} LPA
+        </Typography>
+      )}
       <Box
         maxHeight={250}
         overflow="hidden"
+        position="relative"
+        zIndex={1}
       >
-        <Typography>About Company:</Typography>
-        <Typography>About us</Typography>
+        <span className="opacity-overlay" />
+        <Typography fontWeight={500}>About Company:</Typography>
+        <Typography fontWeight={600}>About us</Typography>
         <Typography>{jobDetailsFromCompany}</Typography>
+        <div className="viewJob-btn">
+          <Button onClick={handleClick}>View job</Button>
+        </div>
       </Box>
       <Box>
-        <Typography>Minimum Experience</Typography>
-        <Typography>{minExp} years</Typography>
+        <Typography
+          fontWeight={500}
+          color="gray"
+        >
+          Minimum Experience
+        </Typography>
+        <Typography>{minExp ? `${minExp} years` : "None"}</Typography>
       </Box>
-      <Button
-        color="secondary"
-        href={jdLink}
+      <Box
+        bgcolor="aquamarine"
+        borderRadius={2}
+        textAlign="center"
+        color="black"
       >
-        Easy Apply
-      </Button>
-      <Button>Unlock referral asks</Button>
-    </Box>
+        <Button
+          onClick={handleClick}
+          fullWidth
+          color={"inherit"}
+          size="large"
+          sx={{ textTransform: "none", fontSize: 18 }}
+          startIcon={<ElectricBolt color="warning" />}
+        >
+          Easy Apply
+        </Button>
+      </Box>
+      <Box
+        bgcolor="#304FFE"
+        borderRadius={2}
+        textAlign="center"
+        color="white"
+      >
+        <Button
+          onClick={handleClick}
+          fullWidth
+          color={"inherit"}
+          sx={{ textTransform: "none", fontSize: 16 }}
+          startIcon={
+            <AvatarGroup max={3}>
+              <Avatar
+                alt="Wfriend1"
+                src="friend1Img"
+                sx={{ width: 24, height: 24 }}
+              />
+              <Avatar
+                alt="Kfriend2"
+                src="friend2Img"
+                sx={{ width: 24, height: 24 }}
+              />
+              <Avatar
+                alt="Dfriend3"
+                src="friend3Img"
+                sx={{ width: 24, height: 24 }}
+              />
+            </AvatarGroup>
+          }
+        >
+          Unlock referral asks
+        </Button>
+      </Box>
+
+      <Popover
+        id={id}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+      >
+        <Stack p={2}>
+          <Typography>This feature is yet to be implemented.</Typography>
+          <Typography>Please check back again soon.</Typography>
+        </Stack>
+      </Popover>
+    </Stack>
   );
 }
 

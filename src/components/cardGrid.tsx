@@ -39,7 +39,7 @@ function CardGrid() {
               jobInfo={job}
             />
           ))}
-          {isLoading && <LoadingSkel />}
+          {isLoading && Array(4).map((_, idx) => <LoadingSkel key={idx} />)}
         </Stack>
       )}
     </Container>
