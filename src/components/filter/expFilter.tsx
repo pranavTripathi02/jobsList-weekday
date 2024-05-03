@@ -7,11 +7,16 @@ import {
 } from "@mui/material";
 import FilterElement from "./filterEl";
 import { useState } from "react";
+import { useAppDispatch } from "../../hooks/redux";
+import { changeFilter } from "../../store/reducers/filtersSlice";
 
 function ExpFilter() {
   const [minExp, setMinExp] = useState("");
+  const dispatch = useAppDispatch();
   const handleChange = (e: SelectChangeEvent) => {
-    setMinExp(e.target.value);
+    const value = e.target.value;
+    setMinExp(value);
+    dispatch(changeFilter({ filter: { minExperience: +value } }));
   };
   return (
     <FilterElement>
