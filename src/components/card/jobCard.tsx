@@ -28,9 +28,13 @@ function JobCard({ jobInfo }: { jobInfo: Tjob }) {
   const currencyCode = salaryCurrencyCode === "USD" ? "$" : "₹";
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [viewMore, setViewMore] = useState(false);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+  const handleViewMore = () => {
+    setViewMore((prev) => !prev);
   };
 
   const handleClose = () => {
@@ -101,17 +105,26 @@ function JobCard({ jobInfo }: { jobInfo: Tjob }) {
       )}
       <Box
         maxHeight={250}
-        overflow="hidden"
+        overflow={viewMore ? "scroll" : "clip"}
         position="relative"
         zIndex={1}
       >
-        <span className="opacity-overlay" />
+        {!viewMore && <span className="opacity-overlay" />}
         <Typography fontWeight={500}>About Company:</Typography>
         <Typography fontWeight={600}>About us</Typography>
         <Typography>{jobDetailsFromCompany}</Typography>
-        <div className="viewJob-btn">
-          <Button onClick={handleClick}>View job</Button>
-        </div>
+        {!viewMore ? (
+          <div className="viewJob-btn">
+            <Button onClick={handleViewMore}>View job</Button>
+          </div>
+        ) : (
+          <Box
+            textAlign="center"
+            py={1}
+          >
+            <Button onClick={handleViewMore}>View less</Button>
+          </Box>
+        )}
       </Box>
       <Box>
         <Typography
