@@ -38,7 +38,7 @@ function CardGrid() {
           setOffset((prev) => prev + 10);
         }
       },
-      { threshold: 0 },
+      { threshold: 0, rootMargin: "0px 0px 250px 0px" },
     );
 
     if (observerTarget.current) {
@@ -125,7 +125,7 @@ function CardGrid() {
       {/* show job cards if jobs or remaining jobs
        * else show not found
        */}
-      {remainingJobs == null || remainingJobs > 0 || filteredJobs.length > 0 ? (
+      {remainingJobs == null || filteredJobs.length > 0 ? (
         <Stack
           direction="row"
           flexWrap="wrap"
@@ -139,7 +139,7 @@ function CardGrid() {
             />
           ))}
           {/* show loading skeleton if first call or loading more jobs*/}
-          {isLoading && <LoadingCards />}
+          {(remainingJobs ?? 0 > 0) && isLoading && <LoadingCards />}
         </Stack>
       ) : (
         <NotFound />

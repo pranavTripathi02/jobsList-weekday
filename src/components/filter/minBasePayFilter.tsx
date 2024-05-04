@@ -31,7 +31,7 @@ function MinBasePayFilter() {
         error={isError}
         helperText={error}
         id="minBasePay-filter"
-        label="Min Base Pay"
+        label="Min Base Pay (in lakhs)"
         variant="outlined"
         value={minBasePay}
         onChange={handleChange}
