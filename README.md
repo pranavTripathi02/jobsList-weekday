@@ -9,4 +9,4 @@
 
 **OR**
 
-(Click Here for the deployed project)[https://sensational-donut-8de8e6.netlify.app/]
+[Click Here for the deployed project](https://sensational-donut-8de8e6.netlify.app/)
