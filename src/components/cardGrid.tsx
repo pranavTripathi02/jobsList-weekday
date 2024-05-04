@@ -125,7 +125,7 @@ function CardGrid() {
       {/* show job cards if jobs or remaining jobs
        * else show not found
        */}
-      {filteredJobs.length > 0 ? (
+      {remainingJobs == null || remainingJobs > 0 || filteredJobs.length > 0 ? (
         <Stack
           direction="row"
           flexWrap="wrap"
@@ -139,9 +139,7 @@ function CardGrid() {
             />
           ))}
           {/* show loading skeleton if first call or loading more jobs*/}
-          {(remainingJobs == null || remainingJobs > 0) && isLoading && (
-            <LoadingCards />
-          )}
+          {isLoading && <LoadingCards />}
         </Stack>
       ) : (
         <NotFound />
