@@ -7,3 +7,6 @@
 - run `npm run dev` for dev mode OR
     `npm run build && npm run preview` for build and preview
 
+**OR**
+
+(Click Here for the deployed project)[https://sensational-donut-8de8e6.netlify.app/]
