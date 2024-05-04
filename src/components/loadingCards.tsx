@@ -1,7 +1,7 @@
 import LoadingSkel from "./loadingSkel";
 
 function LoadingCards() {
-  const loadingArr = [1, 2, 3, 4];
+  const loadingArr = [1];
   return (
     <>
       {loadingArr.map((idx) => (
