@@ -4,22 +4,25 @@ import { Container, Stack } from "@mui/material";
 import JobCard from "./card/jobCard";
 import LoadingCards from "./loadingCards";
 import { useAppSelector } from "../hooks/redux";
+import NotFound from "./notFound";
 
 function CardGrid() {
   const [offset, setOffset] = useState(0);
   const [getJobs, { isLoading }] = useGetJobsMutation();
   const [jobs, setJobs] = useState<Tjob[]>([]);
+  const [remainingJobs, setRemaining] = useState<number | null>(null);
   const filterState = useAppSelector((state) => state.filters);
-  console.log(filterState);
+  console.log(remainingJobs);
 
   const observerTarget = useRef<HTMLDivElement>(null);
 
   // fetch jobs from api using offset
   const fetchJobs = async () => {
-    if (!isLoading) {
+    if (!isLoading && (!remainingJobs || remainingJobs > 0)) {
       try {
         const res = await getJobs({ offset }).unwrap();
         setJobs((prevJobs) => [...prevJobs, ...res.jobs]);
+        setRemaining(res.totalCount - (jobs.length + 10));
       } catch (err) {
         console.error("Error fetching jobs", err);
       }
@@ -90,7 +93,9 @@ function CardGrid() {
         );
       }
     }
-    // if (techStack.length > 0) {
+    // TODO: update after api call updated
+    //
+    // if (techStack.length > 0) { // no tech stack in api call
     //   filteredJobsNew.filter((job) => {
     //     if (job.minExp) return job.minExp > minExperience;
     //   });
@@ -108,7 +113,6 @@ function CardGrid() {
     return filteredJobsNew;
   };
   const filteredJobs = filterJobs();
-  console.log(filteredJobs);
 
   // fetchJobs on offset change
   useEffect(() => {
@@ -117,7 +121,7 @@ function CardGrid() {
 
   return (
     <Container maxWidth="xl">
-      {filteredJobs && (
+      {filteredJobs.length ? (
         <Stack
           direction="row"
           flexWrap="wrap"
@@ -130,9 +134,17 @@ function CardGrid() {
               jobInfo={job}
             />
           ))}
-          {isLoading && <LoadingCards />}
-          <div ref={observerTarget}></div>
+          {/* show loading skeleton if first call or loading */}
+          {(remainingJobs == null || remainingJobs > 0) && isLoading && (
+            <LoadingCards />
+          )}
+          <div
+            style={{ width: "100%" }}
+            ref={observerTarget}
+          ></div>
         </Stack>
+      ) : (
+        <NotFound />
       )}
     </Container>
   );
