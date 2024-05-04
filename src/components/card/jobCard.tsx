@@ -105,7 +105,11 @@ function JobCard({ jobInfo }: { jobInfo: Tjob }) {
       )}
       <Box
         maxHeight={250}
-        overflow={viewMore ? "scroll" : "clip"}
+        sx={{
+          overflowY: `
+        ${viewMore ? "scroll" : "clip"}
+        `,
+        }}
         position="relative"
         zIndex={1}
       >
